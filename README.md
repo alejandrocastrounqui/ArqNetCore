@@ -8,15 +8,15 @@ It pretends to test next aspect list in order to compare whit other options.
 - [Linux integration](#linux-integration)
 - [Virtual environment integration (sdk level)](#virtual-environment-integration-sdk-level)
 - [IDE integration](#ide-integration)
-- [Isolation (in terms of [**The Twelve Factors App**](https://12factor.net/))](#a)
+- [Isolation (in terms of [**The Twelve Factors App**](https://12factor.net/))](#isolation-in-terms-of-the-twelve-factors-app)
 - [Resilience](#resilience)
 - [Hot-reload / AOT](#hot-reload-aot)
-- [Efficiency (time to deploy, time to response, stress)](#a)
-- [Compatibility with other technologies](#a)
-- [Maintainability / reusability](#a)
-- [Monitoring (resource consumption, health, readiness)](#a)
-- [Traceability](#a)
-- [Logging](#a)
+- [Efficiency (time to deploy, time to response, stress)](#efficiency-time-to-deploy-time-to-response-stress)
+- [Compatibility with other technologies](#compatibility-with-other-technologies)
+- [Maintainability / reusability](#maintainability--reusability)
+- [Monitoring (resource consumption, health, readiness)](#monitoring-resource-consumption-health-readiness)
+- [Traceability](#traceability)
+- [Logging](#logging)
 
 ### Setup
 We are going to work on Linux OS.    
