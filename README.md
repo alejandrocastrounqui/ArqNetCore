@@ -8,7 +8,7 @@ It pretends to test next aspect list in order to compare whit other options.
 - [Linux integration](#linux-integration)
 - [Virtual environment integration (sdk level)](#virtual-environment-integration-sdk-level)
 - [IDE integration](#ide-integration)
-- [Isolation (in terms of [**The Twelve Factors App**](https://12factor.net/))](#isolation-in-terms-of-the-twelve-factors-app)
+- [Isolation](#isolation-in-terms-of-the-twelve-factors-app) (in terms of [**The Twelve Factors App**](https://12factor.net/))
 - [Resilience](#resilience)
 - [Hot-reload / AOT](#hot-reload-aot)
 - [Efficiency (time to deploy, time to response, stress)](#efficiency-time-to-deploy-time-to-response-stress)
