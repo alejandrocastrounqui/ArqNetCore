@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
@@ -32,8 +31,8 @@ namespace ArqNetCore.Controllers
         [AllowAnonymous]
         [Route("UserSignUp")]
         public UserSignUpResponseDTO UserSignUp(UserSignUpRequestDTO userSignUpRequestDTO)
-        {
-            _logger.LogInformation("email:" + userSignUpRequestDTO.Email);
+        { 
+            _logger.LogInformation("UserSignUp email:" + userSignUpRequestDTO.Email);
             UserSignUpDTO userSignUpDTO = _mapper.Map<UserSignUpDTO>(userSignUpRequestDTO);
             UserSignUpResultDTO userSignUpResultDTO = _userService.UserSignUp(userSignUpDTO);
             UserSignUpResponseDTO userSignUpResponseDTO = _mapper.Map<UserSignUpResponseDTO>(userSignUpResultDTO);

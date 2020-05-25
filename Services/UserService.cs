@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ArqNetCore.DTOs;
 using ArqNetCore.Entities;
-//using ArqNetCore.Configuration;
+using ArqNetCore.Configuration;
 
 namespace ArqNetCore.Services
 {
@@ -9,25 +9,30 @@ namespace ArqNetCore.Services
     {
         private readonly ILogger<UserService> _logger;
 
-        //private DbContext _dbContext;
+        private ArqNetCoreDbContext _dbContext;
 
         public UserService(
-            ILogger<UserService> logger
-            //DbContext dbContext
+            ILogger<UserService> logger,
+            ArqNetCoreDbContext dbContext
         )
         {
             _logger = logger;
-            //_dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
         public UserSignUpResultDTO UserSignUp(UserSignUpDTO userSignUpDTO)
         {
-            _logger.LogInformation("email:" + userSignUpDTO.Email);
-            User user = new User{
-                Email = userSignUpDTO.Email
+            _logger.LogInformation("UserSignUp email:" + userSignUpDTO.Email);
+            Account account = new Account{
+                Email = userSignUpDTO.Email,
+                Password = userSignUpDTO.Password
             };
-            //_dbContext.Users.Add(user);
-            //_dbContext.SaveChanges();
+            _dbContext.Accounts.Add(account);
+            User user = new User{
+                Account = account
+            };
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
             return new UserSignUpResultDTO();
         }
     }

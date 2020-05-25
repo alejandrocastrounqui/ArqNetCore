@@ -63,7 +63,12 @@ For example, if it were necessary to step out in a Controller code while it woul
 work in progress    
 
 #### Resilience
-work in progress    
+On MySQL integration was used mock database configuration string. When a `_dbContext.SaveChanges();` is executed in this context application shows a message like below:    
+`Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseMySql' call.`    
+It can be said the framework's developers think in terms of 'Resilience' :).    
+BUT:
+EnableRetryOnFailure feature is not a part of the framework, instead, it must to be implemented on each driver. Finally MySQL has not this feature, so, it needs some extra lines of code :(.
+
 
 #### Hot-reload / AOT    
 work in progress    
@@ -127,6 +132,19 @@ And there is a set of classes in `obj/apiClient` that matches with the json api 
 
 #### miscellaneous
 ```
+export PATH="$PATH:/home/principal/.dotnet/tools"
+dotnet tool install --global dotnet-ef
+dotnet ef migrations add InitialCreate
 dotnet add package AutoMapper
 dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet ef dbcontext scaffold "database=dbnetcore;server=localhost;port=3306;user=netcoreuser;password=netcorepass" MySql.Data.EntityFrameworkCore -s ArqNetCore.csproj -o ./Entities -c ArqNetCoreContext -v
+
+CREATE TABLE `__EFMigrationsHistory` 
+( 
+    `MigrationId` nvarchar(150) NOT NULL, 
+    `ProductVersion` nvarchar(32) NOT NULL, 
+     PRIMARY KEY (`MigrationId`) 
+);
+
 ```

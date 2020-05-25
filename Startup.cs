@@ -3,7 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using MySql.Data.EntityFrameworkCore.Infrastructure;
 using AutoMapper;
+using ArqNetCore.Configuration;
+using ArqNetCore.Services;
 
 namespace ArqNetCore
 {
@@ -20,8 +24,21 @@ namespace ArqNetCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+            services.AddDbContext<ArqNetCoreDbContext>(
+                (DbContextOptionsBuilder options) => {
+                options.UseMySQL(
+                    "server=localhost;database=dbnetcore;user=netcoreuser;password=netcorepass", 
+                    (MySQLDbContextOptionsBuilder builder) => {
+                        builder.ExecutionStrategy(context => {
+                            return new ArqNetDbExecutionStrategy(context);
+                        });
+                    }
+                );
+            });
+
             services.AddControllers();
             services.AddSwaggerDocument();
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
