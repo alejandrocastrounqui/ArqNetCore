@@ -1,4 +1,4 @@
-namespace ArqNetCore.DTOs
+namespace ArqNetCore.DTOs.User
 {
     public class UserSignUpResultDTO
     {

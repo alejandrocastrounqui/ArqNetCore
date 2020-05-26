@@ -3,18 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using ArqNetCore.Services;
-using ArqNetCore.DTOs;
+using ArqNetCore.DTOs.User;
 
 namespace ArqNetCore.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("user")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
         private IMapper _mapper;
-
         private IUserService _userService;
+        private IAccountService _accountService;
+        private IAuthService _authService;
 
         public UserController(
             ILogger<UserController> logger,
@@ -29,7 +30,7 @@ namespace ArqNetCore.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("UserSignUp")]
+        [Route("signup")]
         public UserSignUpResponseDTO UserSignUp(UserSignUpRequestDTO userSignUpRequestDTO)
         { 
             _logger.LogInformation("UserSignUp email:" + userSignUpRequestDTO.Email);
@@ -37,6 +38,16 @@ namespace ArqNetCore.Controllers
             UserSignUpResultDTO userSignUpResultDTO = _userService.UserSignUp(userSignUpDTO);
             UserSignUpResponseDTO userSignUpResponseDTO = _mapper.Map<UserSignUpResponseDTO>(userSignUpResultDTO);
             return userSignUpResponseDTO;
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("signin")]
+        public UserSignInResponseDTO UserSignIn(UserSignInRequestDTO userSignInRequestDTO)
+        { 
+            _logger.LogInformation("UserSignIn email:" + userSignInRequestDTO.Email);
+
+           return new UserSignInResponseDTO();
         }
     }
 }

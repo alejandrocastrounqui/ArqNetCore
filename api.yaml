@@ -9,7 +9,6 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-basePath: "/v2"
 tags:
 - name: "medical-supplies"
   description: "manage medical supplies distribution"
@@ -17,17 +16,14 @@ tags:
   description: "manage user accounts"
 - name: "authentication"
   description: "Access control"
-schemes:
-- "https"
-- "http"
 paths:
-  /signup:
+  /user/signup:
     post:
       tags:
       - "user"
-      summary: "Register new user"
+      summary: "Register a new user"
       description: ""
-      operationId: "createUser"
+      operationId: "userSignUp"
       security: 
         - bearerJWT: []
       requestBody:
@@ -46,6 +42,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserSignUpResponseDTO'
+  /user/signin:
+    post:
+      tags:
+      - "user"
+      summary: "Authorize an user"
+      description: ""
+      operationId: "userSignIn"
+      security: 
+        - bearerJWT: []
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignInRequestDTO'
+      responses:
+        "405":
+          description: "Invalid input"
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSignInResponseDTO'
+  /user/refresh:
+    post:
+      tags:
+      - "user"
+      summary: "refresh authorization token"
+      description: ""
+      operationId: "userRefresh"
+      security: 
+        - bearerJWT: []
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRefreshRequestDTO'
+      responses:
+        "405":
+          description: "Invalid input"
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRefreshResponseDTO'
   
 components: 
   securitySchemes:
@@ -72,4 +118,39 @@ components:
           format: "int64"
       xml:
         name: "User"
+    UserSignInRequestDTO:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+      xml:
+        name: "User"
+    UserSignInResponseDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+      xml:
+        name: "User"
+    UserRefreshRequestDTO:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+      xml:
+        name: "User"
+    UserRefreshResponseDTO:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+      xml:
+        name: "User"
+  
   

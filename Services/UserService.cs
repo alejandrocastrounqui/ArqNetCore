@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using ArqNetCore.DTOs;
+using ArqNetCore.DTOs.User;
 using ArqNetCore.Entities;
 using ArqNetCore.Configuration;
 
@@ -23,9 +23,11 @@ namespace ArqNetCore.Services
         public UserSignUpResultDTO UserSignUp(UserSignUpDTO userSignUpDTO)
         {
             _logger.LogInformation("UserSignUp email:" + userSignUpDTO.Email);
+            string passwordRaw = userSignUpDTO.Password;
             Account account = new Account{
-                Email = userSignUpDTO.Email,
-                Password = userSignUpDTO.Password
+                Id = userSignUpDTO.Email,
+                //TODO hash passwordRaw
+                PasswordHash = null
             };
             _dbContext.Accounts.Add(account);
             User user = new User{
@@ -35,5 +37,6 @@ namespace ArqNetCore.Services
             _dbContext.SaveChanges();
             return new UserSignUpResultDTO();
         }
+
     }
 }

@@ -1,8 +1,10 @@
-using ArqNetCore.DTOs;
+using ArqNetCore.DTOs.User;
+
 namespace ArqNetCore.Services
 {
     public interface IUserService
     {
         UserSignUpResultDTO UserSignUp(UserSignUpDTO userSignUpDTO);
+        
     }
 }
