@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ArqNetCore.DTOs.Auth;
 using ArqNetCore.Exceptions.Auth;
 
@@ -19,11 +20,11 @@ namespace ArqNetCore.Services
 
         public AuthService(
             ILogger<UserService> logger,
-            AppSettings appSettings
+            IOptions<AppSettings> appSettings
         )
         {
             _logger = logger;
-            _appSettings = appSettings;
+            _appSettings = appSettings.Value;
         }
 
         public void Verify(AuthVerifyDTO authTokenDTO){
@@ -62,9 +63,9 @@ namespace ArqNetCore.Services
             _logger.LogInformation("AuthToken generating token");
             var tokenHandler = new JwtSecurityTokenHandler();
             var secret = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            Dictionary<string, string> Values = authTokenDTO.Values;
+            IDictionary<string, string> SubjectRaw = authTokenDTO.SubjectRaw;
             var claims = new List<Claim>();
-            foreach(var item in Values)
+            foreach(var item in SubjectRaw)
             {
                 claims.Add(new Claim(item.Key, item.Value));
             }
@@ -75,7 +76,8 @@ namespace ArqNetCore.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(key, algorithm)
+                SigningCredentials = new SigningCredentials(key, algorithm),
+                Claims = authTokenDTO.Claims
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
@@ -83,7 +85,7 @@ namespace ArqNetCore.Services
                 Token = tokenString
             };
         }
-        private AuthHashResultDTO Hash(string valueRaw)
+        public AuthHashResultDTO Hash(string valueRaw)
         {
             if (valueRaw == null)
             {

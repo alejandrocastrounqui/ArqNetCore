@@ -17,6 +17,13 @@ namespace ArqNetCore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Email);
+                    table.ForeignKey(
+                        name: "FK_Users_Accounts_Email",
+                        column: x => x.Email,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade
+                    );
                 }
             );
         }

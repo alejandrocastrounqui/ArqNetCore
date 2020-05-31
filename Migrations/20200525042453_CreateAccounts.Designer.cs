@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArqNetCore.Migrations
 {
     [DbContext(typeof(ArqNetCoreDbContext))]
-    [Migration("20200525054334_CreateUsers")]
-    partial class CreateUsers
+    [Migration("20200525042453_CreateAccounts")]
+    partial class CreateAccounts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,34 +37,7 @@ namespace ArqNetCore.Migrations
                     b.ToTable("Accounts");
                 }
             );
-
-            modelBuilder.Entity("ArqNetCore.Entities.User", b =>
-                {
-                    b.Property<string>("Email")
-                        .HasColumnType("varchar(767)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Email");
-
-                    b.ToTable("Users");
-                }
-            );
-
-            modelBuilder.Entity("ArqNetCore.Entities.User", b =>
-                {
-                    b.HasOne("ArqNetCore.Entities.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("Email")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                }
-            );
-
+          
 #pragma warning restore 612, 618
         }
     }

@@ -7,5 +7,9 @@ namespace ArqNetCore.Services
         
         AuthTokenResultDTO AuthToken(AuthTokenDTO authTokenDTO);
 
+        void Verify(AuthVerifyDTO authTokenDTO);
+
+        AuthHashResultDTO Hash(string valueRaw);
+
     }
 }

@@ -1,9 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using ArqNetCore.Services;
 using ArqNetCore.DTOs.User;
+using ArqNetCore.DTOs.Account;
+using ArqNetCore.DTOs.Auth;
 
 namespace ArqNetCore.Controllers
 {
@@ -20,12 +23,16 @@ namespace ArqNetCore.Controllers
         public UserController(
             ILogger<UserController> logger,
             IMapper mapper,
-            IUserService userService
+            IUserService userService,
+            IAccountService accountService,
+            IAuthService authService
         )
         {
             _logger = logger;
             _mapper = mapper;
             _userService = userService;
+            _accountService = accountService;
+            _authService = authService;
         }
 
         [HttpPost]
@@ -46,8 +53,9 @@ namespace ArqNetCore.Controllers
         public UserSignInResponseDTO UserSignIn(UserSignInRequestDTO userSignInRequestDTO)
         { 
             _logger.LogInformation("UserSignIn email:" + userSignInRequestDTO.Email);
-
-           return new UserSignInResponseDTO();
+            UserSignInDTO userSignInDTO = _mapper.Map<UserSignInDTO>(userSignInRequestDTO);
+            UserSignInResultDTO userSignInResultDTO = _userService.UserSignIn(userSignInDTO);
+            return _mapper.Map<UserSignInResponseDTO>(userSignInResultDTO);
         }
     }
 }

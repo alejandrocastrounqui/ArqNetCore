@@ -52,7 +52,7 @@ paths:
       security: 
         - bearerJWT: []
       requestBody:
-        description: Optional description in *Markdown*
+        description: this pretends to be an alias for OAuth grant_type:client_credentials
         required: true
         content:
           application/json:
@@ -130,9 +130,15 @@ components:
     UserSignInResponseDTO:
       type: "object"
       properties:
-        id:
+        access_token:
+          type: "string"
+        token_type:
+          type: "string"
+        expires_in:
           type: "integer"
           format: "int64"
+        refresh_token:
+          type: "string"
       xml:
         name: "User"
     UserRefreshRequestDTO:
@@ -147,9 +153,8 @@ components:
     UserRefreshResponseDTO:
       type: "object"
       properties:
-        id:
-          type: "integer"
-          format: "int64"
+        token:
+          type: "string"
       xml:
         name: "User"
   

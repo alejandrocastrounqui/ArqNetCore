@@ -132,14 +132,23 @@ And there is a set of classes in `obj/apiClient` that matches with the json api 
 
 #### miscellaneous
 ```
+# add .NET Core tools path to environment variable 
 export PATH="$PATH:/home/principal/.dotnet/tools"
+# install Entity Framework tool
 dotnet tool install --global dotnet-ef
+# create migration based on schema delta
 dotnet ef migrations add InitialCreate
+# Add AutoMapper library dependency
 dotnet add package AutoMapper
+# Add AutoMapper injection library dependency
 dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
+# Add Entity Framework Design library dependency, this is required to create migrations
 dotnet add package Microsoft.EntityFrameworkCore.Design
+# Initialize migration resources
 dotnet ef dbcontext scaffold "database=dbnetcore;server=localhost;port=3306;user=netcoreuser;password=netcorepass" MySql.Data.EntityFrameworkCore -s ArqNetCore.csproj -o ./Entities -c ArqNetCoreContext -v
-
+# Update database schema
+dotnet ef database update
+# This table must be create before scaffold
 CREATE TABLE `__EFMigrationsHistory` 
 ( 
     `MigrationId` nvarchar(150) NOT NULL, 
