@@ -60,7 +60,18 @@ Searching on the web and even consulting a 5 years experience developer we come 
 For example, if it were necessary to step out in a Controller code while it would be expected to jump into the framework implementation, it would instead exit the debug context without continuing navigation. 
 
 #### Isolation (in terms of [**The Twelve Factors App**](https://12factor.net/))    
-work in progress    
+This architecture has complex (unnecessarily) 'launch' configuration systems, it is not wrong to provide a wide variety of configuration systems, but sometimes it is better to discourage bad practices.    
+It is possible to configure the application by environment, which is considered a tricky practice, because eventually someone could leave sensitive data inside the code repository, and worse, code could be executed in production with development configuration.     
+Although, environment variables can be used to configure de application, evidently this is not the main aproach: protocols, port and host are combined in one unique variable named ASPNETCORE_URLS.    
+``` ini
+ASPNETCORE_URLS = "https://localhost:5002,http://localhost:5008"
+```
+
+<img style="width:50%;" src="doc/assets/wtf.jpg">
+
+In a containerized environment it is required to use a workaround to get fixed `protocol` (**http**) and `host` (**0.0.0.0**) but letting the user define `port` 
+
+
 
 #### Resilience
 On MySQL integration was used mock database configuration string. When a `_dbContext.SaveChanges();` is executed in this context application shows a message like below:    
@@ -74,7 +85,34 @@ EnableRetryOnFailure feature is not a part of the framework, instead, it must to
 work in progress    
 
 #### Efficiency (time to deploy, time to response, stress)    
-work in progress    
+
+Setup of tests 
+AMD FX8300 
+Gigabyte 970a-ds3p
+8GB DDR3 (kingston hyperx khx1866 4GB * 2)
+SSD 240GB kingston SUV400S
+Kubuntu 19.10
+Docker version 19.03.8
+
+
+**Deployment:**
+This is a properly named microservice apparently since it can provide service in a couple of seconds literally. It is necessary to devise a new test verify more accurately deployment time
+
+**Idle:**
+
+It can be seen an averega memory usage of `55mb`. This is fantastic:    
+
+<a href="doc/assets/netcore-idle-memory-usage.png">
+  <img style="width:50%;" src="doc/assets/netcore-idle-memory-usage.png">
+</a>    
+
+However is there a fact that generates uncertainty:    
+In other applications, cAdvisor differentiate 2 types of memory: **Total** and **Hot**, ussually **Hot** memory size corresponds to 20% of **Total**, but in **.NET Core** it can not be seen this last type of memory 
+
+
+
+    
+work in progress 
 
 #### Compatibility with other technologies    
 work in progress    
@@ -148,6 +186,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet ef dbcontext scaffold "database=dbnetcore;server=localhost;port=3306;user=netcoreuser;password=netcorepass" MySql.Data.EntityFrameworkCore -s ArqNetCore.csproj -o ./Entities -c ArqNetCoreContext -v
 # Update database schema
 dotnet ef database update
+
 # This table must be create before scaffold
 CREATE TABLE `__EFMigrationsHistory` 
 ( 
@@ -156,4 +195,44 @@ CREATE TABLE `__EFMigrationsHistory`
      PRIMARY KEY (`MigrationId`) 
 );
 
+# build docker image
+docker build -t aspnetapp .
+
+# create docker container and start it
+docker run --rm \
+  -p 9001:80 \
+  -e DB_URL=192.168.0.31 \
+  -e DB_NAME=dbnetcore \
+  -e DB_USERNAME=netcoreuser \
+  -e DB_PASSWORD=netcorepass \
+  --name aspnetapp aspnetapp    
+
+# start existing mysql container
+docker start arq-mysql
+
+# start influxdb container
+docker run -p 8086:8086 influxdb
+
+# start cAdvisor container
+docker run \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:rw \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --publish=8081:8080 \
+  --name=cadvisor \
+  google/cadvisor:latest -storage_driver=influxdb \
+    -storage_driver_host=192.168.0.31:8086
+
+
 ```
+
+liks 
+#.Net Core docker
+https://docs.docker.com/engine/examples/dotnetcore/
+
+#cAdvisor docker
+https://www.neteye-blog.com/2018/04/how-to-monitor-docker-containers-using-cadvisor-part-1/
+
+#influxdb docker
+https://hub.docker.com/_/influxdb

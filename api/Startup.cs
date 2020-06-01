@@ -1,17 +1,18 @@
+using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.EntityFrameworkCore.Infrastructure;
+using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
+using MySql.Data.EntityFrameworkCore.Infrastructure;
 using ArqNetCore.Configuration;
 using ArqNetCore.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace ArqNetCore
 {
@@ -29,11 +30,36 @@ namespace ArqNetCore
         {
             services.AddCors();
             services.AddAutoMapper(typeof(Startup));
+            string DB_URL = Environment.GetEnvironmentVariable("DB_URL");
+            if(DB_URL == null || string.IsNullOrWhiteSpace(DB_URL))
+            {
+                DB_URL = "localhost";
+            }
+            string server = DB_URL;
+            string DB_NAME = Environment.GetEnvironmentVariable("DB_NAME");
+            if(DB_NAME == null || string.IsNullOrWhiteSpace(DB_NAME))
+            {
+                throw new Exception("DB_NAME required");
+            }
+            string database = DB_NAME;
+            string DB_USERNAME = Environment.GetEnvironmentVariable("DB_USERNAME");
+            if(DB_USERNAME == null)
+            {
+                DB_USERNAME = "";
+            }
+            string user = DB_USERNAME;
+            string DB_PASSWORD = Environment.GetEnvironmentVariable("DB_PASSWORD");
+            if(DB_PASSWORD == null)
+            {
+                DB_PASSWORD = "";
+            }
+            string password = DB_PASSWORD;
+            Console.WriteLine("probando console" + DB_NAME);
             services.AddDbContext<ArqNetCoreDbContext>(
                 (DbContextOptionsBuilder options) => 
                 {
                     options.UseMySQL(
-                        "server=localhost;database=dbnetcore;user=netcoreuser;password=netcorepass", 
+                        $"server={server};database={database};user={user};password={password}", 
                         (MySQLDbContextOptionsBuilder builder) => 
                         {
                             builder.ExecutionStrategy(context => {
@@ -41,7 +67,7 @@ namespace ArqNetCore
                         });
                 });
             });
-
+            services.AddHttpClient();
             services.AddControllers();
             services.AddSwaggerDocument();
             services.AddScoped<IUserService, UserService>();
@@ -104,7 +130,6 @@ namespace ArqNetCore
             app.UseRouting();
 
             app.UseAuthorization();
-
             app.UseOpenApi();
             app.UseSwaggerUi3();
 

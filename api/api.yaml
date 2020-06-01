@@ -73,6 +73,31 @@ paths:
       - "user"
       summary: "refresh authorization token"
       description: ""
+      operationId: "proxyPipe"
+      security: 
+        - bearerJWT: []
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProxyPipeRequestDTO'
+      responses:
+        "405":
+          description: "Invalid input"
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProxyPipeResponseDTO'
+  /proxy/pipe:
+    post:
+      tags:
+      - "proxy"
+      summary: "proxy http service"
+      description: ""
       operationId: "userRefresh"
       security: 
         - bearerJWT: []
@@ -92,7 +117,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserRefreshResponseDTO'
-  
 components: 
   securitySchemes:
     bearerJWT:
@@ -157,5 +181,37 @@ components:
           type: "string"
       xml:
         name: "User"
+    ProxyPipeRequestDTO:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        items:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              foo: 
+                type: "string"
+              bar: 
+                type: "string"
+      xml:
+        name: "Pipe"
+    ProxyPipeResponseDTO:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        items:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              foo: 
+                type: "string"
+              bar: 
+                type: "string"
+      xml:
+        name: "Pipe"
   
   
